@@ -1,0 +1,105 @@
+def add_snippet():
+    title = input("Enter snippet title: ")
+    code = input("Enter the code snippet: ")
+
+    with open("snippets.txt", "a") as file:
+        file.write(f"{title}:::{code}\n")
+    print("Snippet added successfully!\n")
+
+
+def view_snippets():
+    try:
+        with open("snippets.txt", "r") as file:
+            snippets = file.readlines()
+
+        if not snippets:
+            print("No snippets found!\n")
+            return
+
+        print("--- All Snippets ---")
+        for line in snippets:
+            title, code = line.strip().split(":::")
+            print(f"Title: {title}\nCode: {code}\n")
+
+    except FileNotFoundError:
+        print("Storage file not found!\n")
+
+
+def search_snippet():
+    search_title = input("Enter title to search: ")
+
+    try:
+        with open("snippets.txt", "r") as file:
+            snippets = file.readlines()
+
+        found = False
+        for line in snippets:
+            title, code = line.strip().split(":::")
+            if title.lower() == search_title.lower():
+                print(f"Snippet found!\nTitle: {title}\nCode: {code}\n")
+                found = True
+                break
+
+        if not found:
+            print("Snippet not found.\n")
+
+    except FileNotFoundError:
+        print("Storage file not found!\n")
+
+
+def delete_snippet():
+    del_title = input("Enter the title to delete: ")
+
+    try:
+        with open("snippets.txt", "r") as file:
+            snippets = file.readlines()
+
+        updated = []
+        deleted = False
+
+        for line in snippets:
+            title, code = line.strip().split(":::")
+            if title.lower() != del_title.lower():
+                updated.append(line)
+            else:
+                deleted = True
+
+        with open("snippets.txt", "w") as file:
+            file.writelines(updated)
+
+        if deleted:
+            print("Snippet deleted successfully.\n")
+        else:
+            print("Snippet not found.\n")
+
+    except FileNotFoundError:
+        print("Storage file not found!\n")
+
+
+def main():
+    while True:
+        print("\n--- Code Snippet Organiser ---")
+        print("1. Add Snippet")
+        print("2. View All Snippets")
+        print("3. Search Snippet")
+        print("4. Delete Snippet")
+        print("5. Exit")
+
+        choice = input("Enter choice: ")
+
+        if choice == '1':
+            add_snippet()
+        elif choice == '2':
+            view_snippets()
+        elif choice == '3':
+            search_snippet()
+        elif choice == '4':
+            delete_snippet()
+        elif choice == '5':
+            print("Exiting... Goodbye!")
+            break
+        else:
+            print("Invalid choice! Try again.\n")
+
+
+main()
